@@ -1,0 +1,15 @@
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.csproj.AssemblyReference.cache
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.GeneratedMSBuildEditorConfig.editorconfig
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.AssemblyInfoInputs.cache
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.AssemblyInfo.cs
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.csproj.CoreCompileInputs.cache
+D:\Users\Borko\source\repos\Snake\Snake\bin\Debug\net6.0\Snake.exe
+D:\Users\Borko\source\repos\Snake\Snake\bin\Debug\net6.0\Snake.deps.json
+D:\Users\Borko\source\repos\Snake\Snake\bin\Debug\net6.0\Snake.runtimeconfig.json
+D:\Users\Borko\source\repos\Snake\Snake\bin\Debug\net6.0\Snake.dll
+D:\Users\Borko\source\repos\Snake\Snake\bin\Debug\net6.0\Snake.pdb
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.dll
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\refint\Snake.dll
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.pdb
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\Snake.genruntimeconfig.cache
+D:\Users\Borko\source\repos\Snake\Snake\obj\Debug\net6.0\ref\Snake.dll
