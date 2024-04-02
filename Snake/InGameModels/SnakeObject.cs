@@ -148,7 +148,7 @@ namespace Snake.InGameModels
 				(direction == 2 && laStDirection == 8) ||
 				(direction == 8 && laStDirection == 2) )
             {
-                direction = laStDirection;
+				directionModifier = laStDirection;
             }
 			switch (directionModifier)
             {

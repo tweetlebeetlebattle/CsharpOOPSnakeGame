@@ -15,12 +15,27 @@ namespace Snake
 		private List<SnakeObject> players;
 		private List<Dictionary<string, char>> playerControls;
 
-		private const int gameBoardWidth = 110;
-		private const int gameBoardHeight = 30;
+		private  int gameBoardWidth; // 110
+		private  int gameBoardHeight; // 30
 		private List<IGameObject> gameBoard;
 
-        public EngineFuel_MakeGameToBeLoaded(int singleOrMultiplayer)
+        public EngineFuel_MakeGameToBeLoaded(int singleOrMultiplayer, string screenSize)
         {
+			switch (screenSize)
+			{
+				case "small":
+					gameBoardWidth = 50;
+					gameBoardHeight = 15;
+					break;
+				case "medium":
+					gameBoardWidth = 75;
+					gameBoardHeight = 22;
+					break;
+				case "full":
+					gameBoardWidth = 110;
+					gameBoardHeight = 30;
+					break;
+			}
 			gameBoard = new List<IGameObject>();
 			playerControls = new List<Dictionary<string,char>>();
 			players = new List<SnakeObject>();
@@ -35,7 +50,7 @@ namespace Snake
 			List<int> startingSnakePositions = SnakeStartPositionCalculator(singleOrMultiplayer);
 			foreach (int position in startingSnakePositions)
 			{
-				SnakeObject newPlayer = new SnakeObject(position, 15, directionModifier, char.Parse(bodyCharLoader.ToString()));
+				SnakeObject newPlayer = new SnakeObject(position, gameBoardHeight / 2, directionModifier, char.Parse(bodyCharLoader.ToString()));
 				if (directionModifier)
 				{
 					directionModifier = false;
@@ -54,7 +69,7 @@ namespace Snake
 			{
 				Dictionary<string, char> playerKeyBinds = new Dictionary<string, char>();
 				string movement = "";
-				Console.WriteLine($"KeyBindings: Player{i}:");
+				Console.WriteLine($"KeyBindings: Player{i + 1}:");
 				for (int k = 0; k < 4; k++)
 				{
 					if (k == 0)
