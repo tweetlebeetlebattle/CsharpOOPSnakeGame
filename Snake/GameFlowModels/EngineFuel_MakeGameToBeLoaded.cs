@@ -11,13 +11,9 @@ using Snake.InGameModels.Interface;
 namespace Snake
 {
     public class EngineFuel_MakeGameToBeLoaded
-		// Game should Implement gamemode Interface, so It can choose one of many categories.
-		// Create GameMode Classes for my "Injected" GameMode Property.
-		// Currently. my implementation only loads graphics and object positions.
 	{
 		private List<SnakeObject> players;
 		private List<Dictionary<string, char>> playerControls;
-		private List<int> scores;
 
 		private const int gameBoardWidth = 110;
 		private const int gameBoardHeight = 30;
@@ -28,42 +24,52 @@ namespace Snake
 			gameBoard = new List<IGameObject>();
 			playerControls = new List<Dictionary<string,char>>();
 			players = new List<SnakeObject>();
-			List<int> startingSnakePositions = snakeStartPositionCalculator(singleOrMultiplayer);
+			InitializeSnakePlayers(singleOrMultiplayer);
+			InitializeKeyBindings();
+		}
+		private void InitializeSnakePlayers(int singleOrMultiplayer)
+		{
 			bool directionModifier = true;
 			int bodyCharLoader = 1;
-			foreach(int position in startingSnakePositions)
+
+			List<int> startingSnakePositions = SnakeStartPositionCalculator(singleOrMultiplayer);
+			foreach (int position in startingSnakePositions)
 			{
 				SnakeObject newPlayer = new SnakeObject(position, 15, directionModifier, char.Parse(bodyCharLoader.ToString()));
-				if(directionModifier)
+				if (directionModifier)
 				{
 					directionModifier = false;
-				} else
+				}
+				else
 				{
 					directionModifier = true;
 				}
 				players.Add(newPlayer);
 				bodyCharLoader++;
 			}
-			for(int i = 0; i < players.Count; i++)
+		}
+		private void InitializeKeyBindings()
+		{
+			for (int i = 0; i < players.Count; i++)
 			{
 				Dictionary<string, char> playerKeyBinds = new Dictionary<string, char>();
-				string movement = ""; 
-				Console.WriteLine($"KeyBindings: Player1:");
-				for(int k = 0; k < 4; k++)
+				string movement = "";
+				Console.WriteLine($"KeyBindings: Player{i}:");
+				for (int k = 0; k < 4; k++)
 				{
-					if( k == 0)
+					if (k == 0)
 					{
 						movement = "Up";
 					}
-					if( k == 1)
+					if (k == 1)
 					{
 						movement = "Down";
 					}
-					if( k == 2)
+					if (k == 2)
 					{
 						movement = "Left";
 					}
-					if( k == 3)
+					if (k == 3)
 					{
 						movement = "Right";
 					}
@@ -72,8 +78,8 @@ namespace Snake
 				}
 				playerControls.Add(playerKeyBinds);
 			}
-        }
-		public bool RenderBoard()
+		}
+		public bool GameRunning()
 		{
 			Console.Clear();
 			GenerateAndRenderWalls();
@@ -90,8 +96,6 @@ namespace Snake
 			ReadControlsToUpdatePlayerCoords();
 			Console.ResetColor();
 			return false;
-			// How to detect collision
-			// how to grow snakes on fruit and endgame on colision.
 		}
 		public bool CollisionCheck()
 		{
@@ -106,6 +110,20 @@ namespace Snake
 					Console.WriteLine($"Snake Player: {i + 1} LOSE!");
 					Console.BackgroundColor = ConsoleColor.Red;
 					return true;
+				}
+				for(int k = 0; k < players.Count; k++) // check collision with another player
+				{
+					for (int u = 0; u < players[k].SnakeBodyCoordinates.Count; u++)
+					{
+						if(k == i && u == 0) // skip current players head
+						{
+							continue;
+						}
+						if (players[k].SnakeBodyCoordinates[u] == gameBoard[indexInTable].Coordinates)
+						{
+							return true;
+						}
+					}
 				}
 				if (gameBoard[indexInTable] is FruitObject)
 				{
@@ -188,14 +206,6 @@ namespace Snake
 				Console.Write($"Score:{players[i].Score}");
 			}
 		}
-		public List<SnakeObject> Players
-		{
-			get
-			{
-				return players;
-			}
-		}
-
 		public void RenderSnake(SnakeObject snake)
 		{
 			for(int i =0; i < snake.SnakeBodyCoordinates.Count; i++)
@@ -263,7 +273,7 @@ namespace Snake
 				Console.WriteLine();
 			}
 		}
-		private List<int> snakeStartPositionCalculator(int oneOrTwoPlayers)
+		private List<int> SnakeStartPositionCalculator(int oneOrTwoPlayers)
 		{
 			List<int> centerPoints = new List<int>();
 			if(oneOrTwoPlayers == 1)

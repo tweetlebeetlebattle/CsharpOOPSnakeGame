@@ -133,17 +133,24 @@ namespace Snake.InGameModels
         private void MoveSnakeHead(int direction)
         {
             int directionModifier = 0;
-            if (direction == 5)
-            {
-                directionModifier = LastDirection;
-            }
-            else
-            {
-                directionModifier = direction;
-            }
             int newWidth = 0;
             int newHeight = 0;
-            switch (directionModifier)
+			if (direction == 5)
+			{
+				directionModifier = LastDirection;
+			}
+			else
+			{
+				directionModifier = direction;
+			}
+            if( (direction == 4 && laStDirection == 6) ||
+				(direction == 6 && laStDirection == 4) ||
+				(direction == 2 && laStDirection == 8) ||
+				(direction == 8 && laStDirection == 2) )
+            {
+                direction = laStDirection;
+            }
+			switch (directionModifier)
             {
                 case 2:
                     newHeight = coordinatesWholeSnake.First().Item2 + 1;

@@ -16,7 +16,7 @@ namespace Snake
 			bool runGame = false;
 			while (!runGame)
 			{
-				runGame = game.RenderBoard();
+				runGame = game.GameRunning();
 			}
 		}
 	}
