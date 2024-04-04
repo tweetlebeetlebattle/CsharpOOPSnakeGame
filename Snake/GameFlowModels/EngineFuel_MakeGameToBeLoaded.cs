@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -102,9 +103,9 @@ namespace Snake
 			{
 				RenderSnake(snake);
 			}
-			GenerateAndOrRenderFruit();
+				GenerateAndOrRenderFruit();
 			GenerateScore();
-			if (CollisionCheck())
+			if (CollisionCheck()) // a bug in the game causes to load wrong coordinates
 			{
 				return true;
 			}
@@ -118,12 +119,11 @@ namespace Snake
 			{
 				int headWidth = players[i].Coordinates.Item1;
 				int headHeight = players[i].Coordinates.Item2;
-				int indexInTable = headHeight * gameBoardWidth + headWidth;
-				if (gameBoard[indexInTable] is WallObject)
+				int indexInTable = headHeight * gameBoardWidth + (headWidth); // Find the Head coordinates in the 2x2 table
+				if (gameBoard[indexInTable] is WallObject)	// check Wall
 				{
 					Console.Clear();
-					Console.WriteLine($"Snake Player: {i + 1} LOSE!");
-					Console.BackgroundColor = ConsoleColor.Red;
+					Console.WriteLine($"Player {i+1} ate Wall!");
 					return true;
 				}
 				for(int k = 0; k < players.Count; k++) // check collision with another player
@@ -134,21 +134,43 @@ namespace Snake
 						{
 							continue;
 						}
-						if (players[k].SnakeBodyCoordinates[u] == gameBoard[indexInTable].Coordinates)
+						if (players[k].SnakeBodyCoordinates.Count > 5)
 						{
+
+						}
+						if ((players[k].SnakeBodyCoordinates[u] == gameBoard[indexInTable].Coordinates) && (gameBoard[indexInTable].Coordinates == players[i].Coordinates))
+						{
+
+							Console.Clear();
+							Console.WriteLine($"Player {i + 1} ate Snake!");
 							return true;
 						}
 					}
 				}
-				if (gameBoard[indexInTable] is FruitObject)
+				if (gameBoard[indexInTable] is Fruit) // Cbeck Fruit
 				{
-					players[i].Eat();
-					IFruit fruit = (FruitObject)gameBoard[indexInTable];
+					players[i].Eat((IFruit)gameBoard[indexInTable]);
+					IFruit fruit = (IFruit)gameBoard[indexInTable];
+					if(fruit is FruitObjectFreezeOthers)
+					{
+						FreezeAllButOne(players[i]);
+					}
 					fruit.GetEaten(gameBoard);
 					Console.BackgroundColor = ConsoleColor.Green;
 				}
 			}
 			return false;
+		}
+		private void FreezeAllButOne(ISnakePlayer thisPlayer)
+		{
+			foreach(var snake in players)
+			{
+				if( snake == thisPlayer)
+				{
+					continue;
+				}
+				snake.IsFrozen = true;
+			}
 		}
 		public void ReadControlsToUpdatePlayerCoords()
 		{
@@ -238,7 +260,7 @@ namespace Snake
 		}
 		public void GenerateAndOrRenderFruit()
 		{
-			if(!gameBoard.Any(obj => obj is FruitObject))	// generate if fruit missing
+			if(!gameBoard.Any(obj => obj is Fruit))	// generate if fruit missing
 			{
 				List<IGameObject> validEmptySpacesPickFruitSpawnPoint = new List<IGameObject>();
 				foreach(var validEmptyObject in gameBoard.Where(obj => obj is EmptyObject))	// validate passable object
@@ -255,10 +277,24 @@ namespace Snake
 				int randomIndexToSwapEmptyWithFruit = rnd.Next(validEmptySpacesPickFruitSpawnPoint.Count);
 				int randomValidWidth = validEmptySpacesPickFruitSpawnPoint[randomIndexToSwapEmptyWithFruit].Coordinates.Item1;
 				int randomValidHeight = validEmptySpacesPickFruitSpawnPoint[randomIndexToSwapEmptyWithFruit].Coordinates.Item2;
-				IGameObject newFruit = new FruitObject(randomValidWidth, randomValidHeight);
+
+				int randomFruitPicker = rnd.Next(6); // if I increase this number, i will increase the odds away from the unique fruit generation
+				IGameObject newFruit = null;
+				if(randomFruitPicker == 0)
+				{
+					newFruit = new FruitObjectSuperPoints(randomValidWidth, randomValidHeight);
+				}
+				else if( randomFruitPicker == 1)
+				{
+					newFruit = new FruitObjectFreezeOthers(randomValidWidth, randomValidHeight);
+				} else
+				{
+					newFruit = new FruitObjectBasic(randomValidWidth, randomValidHeight);
+				}
+				
 				gameBoard[randomValidHeight * gameBoardWidth + randomValidWidth] = newFruit;
 			}   // render fruit
-			FruitObject fruit = (FruitObject)gameBoard.First(obj => obj is FruitObject);
+			Fruit fruit = (Fruit)gameBoard.First(obj => obj is Fruit);
 			Console.SetCursorPosition(fruit.Coordinates.Item1, fruit.Coordinates.Item2);
 			Console.Write(fruit.BodyChar);
 		}
@@ -268,21 +304,39 @@ namespace Snake
 			{
 				for (int j = 0; j < gameBoardWidth; j++)
 				{
+					int gameBoardIndex = (i * gameBoardWidth) + j;
 					if (i == 0 || i == (gameBoardHeight - 1))
 					{
-						Console.Write("x");
-						gameBoard.Add(new WallObject(j,i));
+						Console.Write($"{j%10}");
+						if(gameBoard.Count <= gameBoardIndex || gameBoard.Count == 0)
+						{
+							gameBoard.Add(new WallObject(j, i));
+						}
+						gameBoard[gameBoardIndex] = (new WallObject(j, i));
 					}
 					else
 					if (j == 0 || j == (gameBoardWidth - 1))
 					{
-						Console.Write("x");
-						gameBoard.Add(new WallObject(j, i));
+						Console.Write($"{i%10}");
+						if (gameBoard.Count <= gameBoardIndex || gameBoard.Count == 0)
+						{
+							gameBoard.Add(new WallObject(j, i));
+						}
+						gameBoard[gameBoardIndex] = (new WallObject(j, i));
 					}
 					else
 					{
+						if(gameBoard.Count > gameBoardIndex && gameBoard[gameBoardIndex] is Fruit)
+						{
+							Console.Write(" ");
+							continue;
+						}
 						Console.Write(" ");
-						gameBoard.Add(new EmptyObject(j, i));
+						if (gameBoard.Count <= gameBoardIndex || gameBoard.Count == 0)
+						{
+							gameBoard.Add(new EmptyObject(j, i));
+						}
+						gameBoard[gameBoardIndex] = (new EmptyObject(j, i));
 					}
 				}
 				Console.WriteLine();

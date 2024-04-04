@@ -8,11 +8,12 @@ namespace Snake.InGameModels.Interface
 {
     public interface ISnakePlayer
     {
+        public bool IsFrozen { get; set; }
         public int LastDirection { get; }
         public int Score { get; }
         public List<(int, int)> SnakeBodyCoordinates { get; } // Linear gowrth in datasize in runtime, could potentially be improved
 
-        public void Eat();
+        public void Eat(IFruit fruit);
 
     }
 }

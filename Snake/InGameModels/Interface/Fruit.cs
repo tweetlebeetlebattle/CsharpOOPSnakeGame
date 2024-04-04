@@ -1,42 +1,35 @@
-﻿using Snake.InGameModels.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Snake.InGameModels
+namespace Snake.InGameModels.Interface
 {
-	public class FruitObject : IGameObject, IFruit
+	public abstract class Fruit : IFruit, IGameObject
 	{
 		private bool isFood;
 		private bool isPassable;
-		private bool isEaten;
-		private const char bodyChar = '$';
+		public abstract char BodyChar { get; }
 		private (int, int) coordinates;
-        public FruitObject(int positionWidth, int positionHeight)
-        {
+		public Fruit(int positionWidth, int positionHeight)
+		{
 			coordinates.Item1 = positionWidth;
 			coordinates.Item2 = positionHeight;
 			isFood = true;
 			isPassable = true;
-			isEaten = false;
-        }
-        public bool IsFood { get { return isFood; } }
+		}
+		public bool IsFood { get { return isFood; } }
 
 		public bool IsPassable { get { return isPassable; } }
-
-		public char BodyChar { get { return bodyChar; } }
-
-
 		public void GetEaten(List<IGameObject> objectsList)
 		{
 			objectsList.Remove(this);
 		}
 
-		public (int, int) Coordinates 
+		public (int, int) Coordinates
 		{
-			get 
+			get
 			{
 				return this.coordinates;
 			}

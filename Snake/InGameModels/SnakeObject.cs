@@ -19,6 +19,8 @@ namespace Snake.InGameModels
         private bool isFood;
         private bool isPassable;
         private int laStDirection;
+        private bool isFrozen;
+        private short frozenCounter;
         public SnakeObject(int headWidth, int headHight, bool leftRightDirectionInitialGrowthIndex, char bodyCharSymbol)
         {
             // Console.SetCursorPosition(width, height);
@@ -36,6 +38,8 @@ namespace Snake.InGameModels
             score = 0;
             isFood = false;
             isPassable = false;
+			isFrozen = false;
+            frozenCounter = 0;
             this.bodyCharSymbol = bodyCharSymbol;
         }
         public (int, int) Coordinates
@@ -92,10 +96,35 @@ namespace Snake.InGameModels
 
         }
 
-        public void Eat()
+		public bool IsFrozen 
+        { 
+            get { return isFrozen; } 
+            set
+            {
+                isFrozen = value;
+            }
+        }
+
+		public void Eat(IFruit fruit)
         {
-            coordinatesWholeSnake.Add(coordinatesWholeSnake.Last());
-            score++;
+            if(fruit is FruitObjectBasic)
+            {
+				coordinatesWholeSnake.Add(coordinatesWholeSnake.Last());
+				score++;
+			}
+            if(fruit is FruitObjectSuperPoints)
+            {
+				FruitObjectSuperPoints superFruit = (FruitObjectSuperPoints)fruit;
+				for (int i = 0; i < superFruit.SuperPoints; i++)
+				{
+					coordinatesWholeSnake.Add(coordinatesWholeSnake.Last());
+					score++;
+				}
+			}
+            if(fruit is FruitObjectFreezeOthers)
+            {
+                score++;
+            }
         }
         private void MoveSnakeBody()
         {
@@ -109,6 +138,18 @@ namespace Snake.InGameModels
 		}
         public void MoveSnakeHeadController(string direction)
         {
+
+            if (isFrozen)   // freeze player 
+            {
+                if(frozenCounter == 4)
+                {
+                    frozenCounter = 0;
+                    isFrozen = false;
+                    return;
+                }
+                frozenCounter++;
+                return;
+            }
             int directionCommanded = 0;
             switch (direction)
             {

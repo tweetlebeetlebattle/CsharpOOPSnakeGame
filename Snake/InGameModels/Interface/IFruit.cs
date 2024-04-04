@@ -8,7 +8,6 @@ namespace Snake.InGameModels.Interface
 {
     public interface IFruit
     {
-        public char BodyChar { get; }
         public void GetEaten(List<IGameObject> objectsList);
     }
 }
