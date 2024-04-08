@@ -183,7 +183,7 @@ namespace Snake
 			Console.Write(":");
 
 			DateTime startTime = DateTime.Now;
-			TimeSpan duration = TimeSpan.FromMilliseconds(200);
+			TimeSpan duration = TimeSpan.FromMilliseconds(100);
 
 			while ((DateTime.Now - startTime) < duration)
 			{
@@ -214,14 +214,12 @@ namespace Snake
 				bool actionNotFound = true;
 				foreach(char control in inputStringToList)
 				{
-					foreach(var dictionary in playerControls)
+					var dictionary = playerControls[i];
+					if (dictionary.ContainsValue(control))
 					{
-						if(dictionary.ContainsValue(control))
-						{
-							string action = dictionary.FirstOrDefault(item => item.Value == control).Key;
-							allUserInput.Add(action);
-							actionNotFound = false;
-						} 
+						string action = dictionary.FirstOrDefault(item => item.Value == control).Key;
+						allUserInput.Add(action);
+						actionNotFound = false;
 					}
 				}
 				if (actionNotFound)
@@ -242,6 +240,10 @@ namespace Snake
 				Console.SetCursorPosition(111, 6 + (i * 5));
 				Console.Write($"Score:{players[i].Score}");
 			}
+			Console.SetCursorPosition(111, 8);	Console.Write($"$ Basic");
+			Console.SetCursorPosition(111, 9); Console.Write($"@ Super");
+			Console.SetCursorPosition(111, 10); Console.Write($"# Freeze");
+
 		}
 		public void RenderSnake(SnakeObject snake)
 		{
@@ -307,7 +309,7 @@ namespace Snake
 					int gameBoardIndex = (i * gameBoardWidth) + j;
 					if (i == 0 || i == (gameBoardHeight - 1))
 					{
-						Console.Write($"{j%10}");
+						Console.Write($"x");
 						if(gameBoard.Count <= gameBoardIndex || gameBoard.Count == 0)
 						{
 							gameBoard.Add(new WallObject(j, i));
@@ -317,7 +319,7 @@ namespace Snake
 					else
 					if (j == 0 || j == (gameBoardWidth - 1))
 					{
-						Console.Write($"{i%10}");
+						Console.Write($"x");
 						if (gameBoard.Count <= gameBoardIndex || gameBoard.Count == 0)
 						{
 							gameBoard.Add(new WallObject(j, i));
