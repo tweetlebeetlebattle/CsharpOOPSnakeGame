@@ -9,8 +9,8 @@ namespace Snake.GameFlowModels.Interface
 {
 	public class IGameMap
 	{
-		int mapWidth { get; }
-		int mapHight { get; }
+		int GameBoardWidth { get; }
+		int GameBoardHeight { get; }
 
 		List<IGameObject> gameBoard;
 		List<(int, int)> CalculateStartingCoordinates(int numberOfPlayers)
@@ -21,8 +21,8 @@ namespace Snake.GameFlowModels.Interface
 				int playersCountOffset = numberOfPlayers == 1 ? 0 : 1;
 				int widthOffset = (i % 2 == 0) ? 1 : 2;
 				int heightOffset = i < 2 ? 1 : 2;
-				int coordWidth = (mapWidth / (2 + playersCountOffset) * widthOffset);
-				int coordHeight = (mapHight / (2 + playersCountOffset) * heightOffset); 
+				int coordWidth = (GameBoardWidth / (2 + playersCountOffset) * widthOffset);
+				int coordHeight = (GameBoardHeight / (2 + playersCountOffset) * heightOffset); 
 				(int, int) coords = (coordWidth, coordHeight);
 				startCoords.Add(coords);
 			}

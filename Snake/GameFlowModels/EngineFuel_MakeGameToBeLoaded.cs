@@ -22,6 +22,11 @@ namespace Snake
 
         public EngineFuel_MakeGameToBeLoaded(int singleOrMultiplayer, string screenSize)
         {
+
+			gameBoard = new List<IGameObject>();
+			playerControls = new List<Dictionary<string, char>>();
+			players = new List<SnakeObject>();
+
 			switch (screenSize)
 			{
 				case "small":
@@ -37,9 +42,6 @@ namespace Snake
 					gameBoardHeight = 30;
 					break;
 			}
-			gameBoard = new List<IGameObject>();
-			playerControls = new List<Dictionary<string,char>>();
-			players = new List<SnakeObject>();
 			InitializeSnakePlayers(singleOrMultiplayer);
 			InitializeKeyBindings();
 		}
@@ -47,11 +49,10 @@ namespace Snake
 		{
 			bool directionModifier = true;
 			int bodyCharLoader = 1;
-
-			List<int> startingSnakePositions = SnakeStartPositionCalculator(singleOrMultiplayer);
-			foreach (int position in startingSnakePositions)
+			List<(int, int)> startingSnakePositions = CalculateStartingCoordinates(singleOrMultiplayer);
+			foreach (var position in startingSnakePositions)
 			{
-				SnakeObject newPlayer = new SnakeObject(position, gameBoardHeight / 2, directionModifier, char.Parse(bodyCharLoader.ToString()));
+				SnakeObject newPlayer = new SnakeObject(position.Item1, position.Item2, directionModifier, char.Parse(bodyCharLoader.ToString()));
 				if (directionModifier)
 				{
 					directionModifier = false;
@@ -63,6 +64,21 @@ namespace Snake
 				players.Add(newPlayer);
 				bodyCharLoader++;
 			}
+		}
+		List<(int, int)> CalculateStartingCoordinates(int numberOfPlayers)
+		{
+			List<(int, int)> startCoords = new List<(int, int)>();
+			for (int i = 0; i < numberOfPlayers; i++)   // calculate equally spaced starting positions for a maximum of 4 players using a runtime calculation
+			{
+				int playersCountOffset = numberOfPlayers == 1 ? 0 : 1;
+				int widthOffset = (i % 2 == 0) ? 1 : 2;
+				int heightOffset = i < 2 ? 1 : 2;
+				int coordWidth = (gameBoardWidth / (2 + playersCountOffset) * widthOffset);
+				int coordHeight = (gameBoardHeight / (2 + playersCountOffset) * heightOffset);
+				(int, int) coords = (coordWidth, coordHeight);
+				startCoords.Add(coords);
+			}
+			return startCoords;
 		}
 		private void InitializeKeyBindings()
 		{
@@ -343,20 +359,6 @@ namespace Snake
 				}
 				Console.WriteLine();
 			}
-		}
-		private List<int> SnakeStartPositionCalculator(int oneOrTwoPlayers)
-		{
-			List<int> centerPoints = new List<int>();
-			if(oneOrTwoPlayers == 1)
-			{
-				centerPoints.Add((gameBoardWidth - 2) / 2);
-			} 
-			if(oneOrTwoPlayers == 2)
-			{
-				centerPoints.Add((gameBoardWidth - 2) / 3);
-				centerPoints.Add(((gameBoardWidth - 2) / 3) * 2);
-			}
-			return centerPoints;
 		}
 	}
 }
