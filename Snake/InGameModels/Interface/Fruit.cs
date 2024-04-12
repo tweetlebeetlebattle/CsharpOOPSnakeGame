@@ -34,5 +34,10 @@ namespace Snake.InGameModels.Interface
 				return this.coordinates;
 			}
 		}
+
+		public char RenderChar
+		{
+			get { return BodyChar; }
+		}
 	}
 }

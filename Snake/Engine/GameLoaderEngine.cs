@@ -11,7 +11,6 @@ namespace Snake
 		public void Run()
 		{
 			int numberOfPlayers = LoadPlayerCount();
-			Console.WriteLine("Enter playbox size, available: small, medium, full");
 			string size = LoadMapSize();
 			EngineFuel_MakeGameToBeLoaded game = new EngineFuel_MakeGameToBeLoaded(numberOfPlayers, size);
 			bool runGame = false;
@@ -22,14 +21,14 @@ namespace Snake
 		}
 		public int LoadPlayerCount()
 		{
-			Console.WriteLine("For SinglePlayer press 1 or Multiplayer press 2");
+			Console.WriteLine("For SinglePlayer press 1 or TwoPlayer press 2 or ThreePlayer press 3");
 			while (true)
 			{
 				int userOutput = 0;
 				string input = Console.ReadLine();
 				if(int.TryParse(input, out userOutput))
 				{
-					if(userOutput == 1 || userOutput == 2)
+					if(userOutput == 1 || userOutput == 2 || userOutput == 3)
 					{
 						return userOutput;
 					}

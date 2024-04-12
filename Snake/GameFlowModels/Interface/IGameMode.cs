@@ -13,5 +13,6 @@ namespace Snake.GameObjects.Interface
 		// Cooperative vs a Perfect Bot? Bot navigates with depth search algorithm to find the shortest path?
 
 		// Custom maps: crumbling map( deteriorates - impassable objects progresively fill the space. ), normal map 
+
 	}
 }

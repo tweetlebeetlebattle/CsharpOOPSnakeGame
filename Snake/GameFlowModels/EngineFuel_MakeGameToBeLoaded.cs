@@ -119,9 +119,9 @@ namespace Snake
 			{
 				RenderSnake(snake);
 			}
-				GenerateAndOrRenderFruit();
+			GenerateAndOrRenderFruit();
 			GenerateScore();
-			if (CollisionCheck()) // a bug in the game causes to load wrong coordinates
+			if (CollisionCheck()) 
 			{
 				return true;
 			}

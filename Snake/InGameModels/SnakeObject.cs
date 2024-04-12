@@ -105,6 +105,11 @@ namespace Snake.InGameModels
             }
         }
 
+		public char RenderChar
+        {
+            get { return headCharSymbol; }
+        }
+
 		public void Eat(IFruit fruit)
         {
             if(fruit is FruitObjectBasic)

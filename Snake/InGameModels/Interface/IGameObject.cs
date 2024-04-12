@@ -5,5 +5,6 @@
         public bool IsFood { get; }
         public bool IsPassable { get; }
         public (int, int) Coordinates { get; }
+        char RenderChar { get; }
     }
 }

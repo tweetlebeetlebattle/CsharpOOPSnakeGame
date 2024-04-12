@@ -13,6 +13,7 @@ namespace Snake.InGameModels
         private bool isFood;
         private bool isPassable;
         private (int, int) coordinates;
+        private char renderChar = 'x';
         public WallObject(int height, int width)
         {
             isFood = false;
@@ -30,5 +31,10 @@ namespace Snake.InGameModels
         public bool IsFood { get { return isFood; } }
 
         public bool IsPassable { get { return isPassable; } }
-    }
+
+		public char RenderChar
+        {
+            get { return renderChar; }
+        }
+	}
 }
